@@ -36,7 +36,7 @@ describe Oystercard do
   end
 
   context 'when trying to touch in with no money' do
-    before { subject.balance = 0 }
+    before { subject.balance = (Oystercard::MINIMUM_BALANCE-1) }
     it 'raises an error' do
       expect { subject.touch_in }.to raise_error "Insufficient balance"
     end
@@ -58,6 +58,20 @@ describe Oystercard do
     it 'deducts amount at touch out' do
       subject.touch_in
       expect { subject.touch_out }.to change { subject.balance }.by (-Oystercard::MINIMUM_BALANCE)
+    end
+  end
+
+  context 'Passing in station on touching in and out' do
+    let(:random_station) { double("station") }
+    before { subject.balance = Oystercard::MINIMUM_BALANCE }
+    it 'Remembers what station you travel from' do
+      subject.touch_in(random_station)
+      expect(subject.entry_station).to eq random_station
+    end
+    it 'Forgets station on touching out' do
+      subject.touch_in(random_station)
+      subject.touch_out
+      expect(subject.entry_station).to eq nil
     end
   end
 

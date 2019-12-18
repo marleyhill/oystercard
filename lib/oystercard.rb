@@ -1,6 +1,6 @@
 class Oystercard
   attr_accessor :balance
-  attr_reader :in_journey
+  attr_reader :entry_station
   MAXIMUM_BALANCE = 90
   MINIMUM_BALANCE = 1
 
@@ -9,16 +9,18 @@ class Oystercard
   end
 
   def in_journey?
-    @in_journey
+    @entry_station
   end
 
-  def touch_in
+  def touch_in(station = "test station")
+    @entry_station = station
     fail "Insufficient balance" if minimum_balance?
-    @in_journey = true
+    # @in_journey = true
   end
 
   def touch_out
-    @in_journey = false
+    # @in_journey = false
+    @entry_station = nil
     deduct(MINIMUM_BALANCE)
   end
 
